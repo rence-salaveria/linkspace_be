@@ -6,11 +6,12 @@ use App\Enums\HttpStatus;
 
 trait HttpResponse
 {
-    public function success($data, $message, $code = HttpStatus::OK) {
+    public function success($data, $message, $code = HttpStatus::OK): \Illuminate\Http\JsonResponse
+    {
         return response()->json([
             'status' => "Request successful",
             'message' => $message,
-            'data' => $data,
+            'payload' => $data,
             'requestTime' => now()
         ], $code->value);
     }

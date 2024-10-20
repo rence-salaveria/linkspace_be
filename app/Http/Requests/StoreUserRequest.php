@@ -10,7 +10,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'full_name' => ['required'],
-            'username' => ['required'],
+            'username' => 'required|string|max:255|unique:users',
             'email' => ['required', 'email', 'max:254'],
             'email_verified_at' => ['nullable', 'date'],
             'password' => ['required'],
