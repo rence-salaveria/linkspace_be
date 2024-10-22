@@ -12,19 +12,24 @@ class ConsultationController extends Controller
 {
     use HttpResponse, AuditLogger;
 
-    public function index()
-    {
-        return ConsultationResource::collection(Consultation::all());
-    }
+//    public function index()
+//    {
+//        return ConsultationResource::collection(Consultation::all());
+//    }
 
     public function store(ConsultationRequest $request)
     {
         return new ConsultationResource(Consultation::create($request->validated()));
     }
 
-    public function showByCounselorId(int $counselor)
+    public function getByCounselorId(int $counselor)
     {
         $allConsultations = Consultation::where('counselor_id', $counselor)->get();
         return $this->success($allConsultations, "Fetched successfully");
+    }
+
+    public function show(int $consultationID)
+    {
+        return new ConsultationResource(Consultation::with(['student'])->findOrFail($consultationID));
     }
 }
