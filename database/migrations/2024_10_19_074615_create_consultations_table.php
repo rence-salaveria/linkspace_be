@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('counselor_id');
             $table->foreignId('student_id');
+            $table->string('status', 64)->default('LookUp-001');
             $table->dateTime('schedule_date')->nullable();
             $table->text('concern')->nullable();
             $table->text('counselor_comment')->nullable();

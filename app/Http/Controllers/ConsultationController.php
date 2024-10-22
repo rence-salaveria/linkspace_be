@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ConsultationRequest;
 use App\Http\Resources\ConsultationResource;
+use App\Http\Traits\AuditLogger;
+use App\Http\Traits\HttpResponse;
 use App\Models\Consultation;
 
 class ConsultationController extends Controller
 {
+    use HttpResponse, AuditLogger;
+
     public function index()
     {
         return ConsultationResource::collection(Consultation::all());
@@ -18,22 +22,9 @@ class ConsultationController extends Controller
         return new ConsultationResource(Consultation::create($request->validated()));
     }
 
-    public function show(Consultation $consultation)
+    public function showByCounselorId(int $counselor)
     {
-        return new ConsultationResource($consultation);
-    }
-
-    public function update(ConsultationRequest $request, Consultation $consultation)
-    {
-        $consultation->update($request->validated());
-
-        return new ConsultationResource($consultation);
-    }
-
-    public function destroy(Consultation $consultation)
-    {
-        $consultation->delete();
-
-        return response()->json();
+        $allConsultations = Consultation::where('counselor_id', $counselor)->get();
+        return $this->success($allConsultations, "Fetched successfully");
     }
 }

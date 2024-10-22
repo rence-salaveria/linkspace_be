@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConsultationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,8 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 
-Route::group([
-    'prefix' => '/student',
-], function () {
-
+Route::group(['prefix' => 'consultation'], function () {
+    Route::get('/', [ConsultationController::class, 'index']);
+    Route::get('/{counselor}', [ConsultationController::class, 'showByCounselorId']);
+    Route::post('/create', [ConsultationController::class, 'create']);
 });
