@@ -71,4 +71,10 @@ class AuthController extends Controller
             'token' => $token,
         ], 'Login successfully');
     }
+
+    public function dashboardInfo(Request $request)
+    {
+        $user = Auth::user();
+
+    }
 }

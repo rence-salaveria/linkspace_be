@@ -21,3 +21,5 @@ Route::group(['prefix' => 'consultation'], function () {
     Route::get('/show/{consultation}', [ConsultationController::class, 'show']);
     Route::post('/create', [ConsultationController::class, 'create']);
 });
+
+Route::get('/dashboard-info', [AuthController::class, 'dashboardInfo']);
