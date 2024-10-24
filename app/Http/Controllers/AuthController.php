@@ -7,6 +7,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Traits\AuditLogger;
 use App\Http\Traits\HttpResponse;
 use App\Models\Audit;
+use App\Models\Consultation;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -74,7 +76,33 @@ class AuthController extends Controller
 
     public function dashboardInfo(Request $request)
     {
-        $user = Auth::user();
+        $user = Auth::id();
 
+        $startOfToday = now()->startOfDay();
+        $endOfToday = now()->endOfDay();
+
+        $audit = Audit::where('user_id', $user)->count();
+        $student = Student::count();
+        $user = Auth::id();
+
+        $consultation = Consultation::where('counselor_id', $user)
+            ->whereIn('status', ['LookUp-001', 'LookUp-002'])
+            ->count();
+
+        $todayConsultations = Consultation::where('counselor_id', $user)
+            ->whereBetween('schedule_date', [$startOfToday, $endOfToday])
+            ->count();
+
+        $history = Consultation::where('counselor_id', $user)
+            ->where('status', 'LookUp-003')
+            ->count();
+
+        return $this->success([
+            'audit' => $audit,
+            'student' => $student,
+            'consultation' => $consultation,
+            'todayConsultations' => $todayConsultations,
+            'history' => $history,
+        ], 'Dashboard information retrieved successfully');
     }
 }
