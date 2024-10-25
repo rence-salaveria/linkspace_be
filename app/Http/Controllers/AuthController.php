@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\HttpStatus;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\UserResource;
 use App\Http\Traits\AuditLogger;
 use App\Http\Traits\HttpResponse;
 use App\Models\Audit;
@@ -69,31 +70,38 @@ class AuthController extends Controller
         ]));
 
         return $this->success([
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $token,
         ], 'Login successfully');
     }
 
     public function dashboardInfo(Request $request)
     {
-        $user = Auth::id();
+        $userInfo = $request->header('X-User-Info');
+
+        if ($userInfo) {
+            $user = json_decode($userInfo, true);
+            $userId = $user['id'] ?? null;
+        } else {
+            return $this->error('No user info found', HttpStatus::BAD_REQUEST);
+        }
 
         $startOfToday = now()->startOfDay();
         $endOfToday = now()->endOfDay();
 
-        $audit = Audit::where('user_id', $user)->count();
+        $audit = Audit::where('user_id', $userId)->count();
         $student = Student::count();
         $user = Auth::id();
 
-        $consultation = Consultation::where('counselor_id', $user)
+        $consultation = Consultation::where('counselor_id', $userId)
             ->whereIn('status', ['LookUp-001', 'LookUp-002'])
             ->count();
 
-        $todayConsultations = Consultation::where('counselor_id', $user)
+        $todayConsultations = Consultation::where('counselor_id', $userId)
             ->whereBetween('schedule_date', [$startOfToday, $endOfToday])
             ->count();
 
-        $history = Consultation::where('counselor_id', $user)
+        $history = Consultation::where('counselor_id', $userId)
             ->where('status', 'LookUp-003')
             ->count();
 
