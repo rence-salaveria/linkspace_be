@@ -17,6 +17,7 @@ class ConsultationResource extends JsonResource
             'scheduleDate' => $this->schedule_date,
             'concern' => $this->concern,
             'counselorComment' => $this->counselor_comment,
+            'status' => $this->status,
 
             'counselorId' => $this->counselor_id,
             'studentId' => $this->student_id,
