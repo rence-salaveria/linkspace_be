@@ -24,8 +24,8 @@ class ConsultationController extends Controller
 
     public function getByCounselorId(int $counselor)
     {
-        $allConsultations = Consultation::where('counselor_id', $counselor)->get();
-        return $this->success($allConsultations, "Fetched successfully");
+        $allConsultations = Consultation::with(['student'])->where('counselor_id', $counselor)->get();
+        return $this->success(ConsultationResource::collection($allConsultations), "Fetched successfully");
     }
 
     public function show(int $consultationID)
