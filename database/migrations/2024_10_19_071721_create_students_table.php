@@ -69,6 +69,7 @@ return new class extends Migration {
             $table->text('self_image_answer');
             $table->text('self_motivation_answer');
             $table->text('decision_making_answer');
+            $table->text('info_sheet_path')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

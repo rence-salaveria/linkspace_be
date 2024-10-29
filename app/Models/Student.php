@@ -71,6 +71,7 @@ class Student extends Model
         'self_image_answer',
         'self_motivation_answer',
         'decision_making_answer',
+        'info_sheet_path'
     ];
 
     protected function casts(): array

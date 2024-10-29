@@ -23,3 +23,6 @@ Route::group(['prefix' => 'consultation'], function () {
 });
 
 Route::get('/dashboard-info', [AuthController::class, 'dashboardInfo']);
+
+Route::post('/upload/info-sheet', [\App\Http\Controllers\StudentController::class, 'uploadPersonalInfoSheet']);
+Route::post('/upload/revert', [\App\Http\Controllers\StudentController::class, 'revertFile']);

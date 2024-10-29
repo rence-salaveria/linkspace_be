@@ -74,6 +74,7 @@ class StudentResource extends JsonResource
             'selfImageAnswer' => $this->self_image_answer,
             'selfMotivationAnswer' => $this->self_motivation_answer,
             'decisionMakingAnswer' => $this->decision_making_answer,
+            'infoSheet' => $this->info_sheet_path
         ];
     }
 }
