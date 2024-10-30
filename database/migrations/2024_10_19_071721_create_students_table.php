@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->string('spouse_name')->nullable();
             $table->string('spouse_occupation')->nullable();
             $table->integer('birth_order');
-            $table->string('brother_count')->default(0);
+            $table->integer('brother_count')->default(0);
             $table->integer('sister_count')->default(0);
             $table->integer('total_siblings')->default(0);
             $table->string('living_with');
