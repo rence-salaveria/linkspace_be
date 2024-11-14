@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddStudentRequest;
 use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentResource;
+use App\Http\Traits\HttpResponse;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,14 +13,10 @@ use Random\RandomException;
 
 class StudentController extends Controller
 {
+    use HttpResponse;
     public function index()
     {
         return StudentResource::collection(Student::all());
-    }
-
-    public function store(StudentRequest $request)
-    {
-        return new StudentResource(Student::create($request->validated()));
     }
 
     public function show(Student $student)
@@ -87,6 +85,82 @@ class StudentController extends Controller
             }
         } catch (\Exception $e) {
             return response()->json(['message' => 'Server Error'], 500);
+        }
+    }
+
+    public function addStudent(Request $request) {
+
+        try {
+            $mappedData = [
+                'first_name' => $request['firstName'],
+                'last_name' => $request['lastName'],
+                'middle_name' => $request['middleName'] ?? null,
+                'nickname' => $request['nickname'] ?? null,
+                'gender' => $request['gender'],
+                'course' => $request['course'],
+                'year' => $request['year'],
+                'birthdate' => $request['birthdate'],
+                'mailing_address' => $request['mailingAddress'],
+                'mailing_contact_number' => $request['mailingContactNumber'],
+                'permanent_address' => $request['permanentAddress'] ?? $request['mailingAddress'],
+                'permanent_contact_number' => $request['permanentContactNumber'] ?? $request['mailingContactNumber'],
+                'residency' => $request['residency'],
+                'civil_status' => $request['civilStatus'],
+                'religion' => $request['religion'],
+                'spouse_name' => $request['spouseName'] ?? null,
+                'spouse_occupation' => $request['spouseOccupation'] ?? null,
+                'birth_order' => $request['birthOrder'],
+                'brother_count' => $request['brotherCount'],
+                'sister_count' => $request['sisterCount'],
+                'total_siblings' => $request['totalSiblings'],
+                'living_with' => $request['livingWith'],
+                'father_living' => $request['fatherLiving'],
+                'father_name' => $request['fatherName'],
+                'father_nationality' => $request['fatherNationality'],
+                'father_religion' => $request['fatherReligion'],
+                'father_educ_attainment' => $request['fatherEducAttainment'],
+                'father_occupation' => $request['fatherOccupation'],
+                'father_company' => $request['fatherCompany'],
+                'father_birthdate' => $request['fatherBirthdate'],
+                'father_contact_number' => $request['fatherContactNumber'] ?? null,
+                'mother_living' => $request['motherLiving'],
+                'mother_name' => $request['motherName'],
+                'mother_nationality' => $request['motherNationality'],
+                'mother_religion' => $request['motherReligion'],
+                'mother_educ_attainment' => $request['motherEducAttainment'],
+                'mother_occupation' => $request['motherOccupation'],
+                'mother_company' => $request['motherCompany'],
+                'mother_birthdate' => $request['motherBirthdate'],
+                'mother_contact_number' => $request['motherContactNumber'] ?? null,
+                'monthly_income' => $request['monthlyIncome'],
+                'guardian_name' => $request['guardianName'] ?? null,
+                'guardian_relationship' => $request['guardianRelationship'] ?? null,
+                'guardian_address' => $request['guardianAddress'] ?? null,
+                'guardian_contact_number' => $request['guardianContactNumber'] ?? null,
+                'guardian_email' => $request['guardianEmail'] ?? null,
+                'emergency_contact' => $request['emergencyContact'] ?? null,
+                'emergency_contact_number' => $request['emergencyContactNumber'] ?? null,
+                'educ_status' => json_encode($request['educStatus']),
+                'educ_background' => json_encode($request['educBackground'] ?? []),
+                'educ_assistance' => $request['educAssistance'],
+                'educ_assistance_info' => $request['educAssistanceInfo'] ?? null,
+                'institutional_affiliations' => json_encode($request['institutionalAffiliations'] ?? []),
+                'work_experience' => json_encode($request['workExperience'] ?? []),
+                'interest' => json_encode($request['interest'] ?? []),
+                'talents' => json_encode($request['talents'] ?? []),
+                'characteristics' => json_encode($request['characteristics'] ?? []),
+                'self_image_answer' => $request['selfImageAnswer'],
+                'self_motivation_answer' => $request['selfMotivationAnswer'],
+                'decision_making_answer' => $request['decisionMakingAnswer'],
+                'info_sheet_path' => $request['infoSheetPath']['path'],
+            ];
+
+            $student = Student::create($mappedData);
+
+            return $this->success(new StudentResource($student), 'Student added successfully');
+        } catch (\Exception $e) {
+            dd($e);
+            return $this->error($e->getMessage(), 500);
         }
     }
 }

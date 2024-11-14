@@ -22,6 +22,10 @@ Route::group(['prefix' => 'consultation'], function () {
     Route::post('/create', [ConsultationController::class, 'create']);
 });
 
+Route::group(['prefix' => 'student'], function () {
+    Route::post('/add', [\App\Http\Controllers\StudentController::class, 'addStudent']);
+});
+
 Route::get('/dashboard-info', [AuthController::class, 'dashboardInfo']);
 
 Route::post('/upload/info-sheet', [\App\Http\Controllers\StudentController::class, 'uploadPersonalInfoSheet']);
