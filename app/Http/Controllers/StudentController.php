@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\HttpStatus;
 use App\Http\Requests\AddStudentRequest;
 use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentResource;
@@ -89,7 +90,6 @@ class StudentController extends Controller
     }
 
     public function addStudent(Request $request) {
-
         try {
             $mappedData = [
                 'first_name' => $request['firstName'],
@@ -159,8 +159,7 @@ class StudentController extends Controller
 
             return $this->success(new StudentResource($student), 'Student added successfully');
         } catch (\Exception $e) {
-            dd($e);
-            return $this->error($e->getMessage(), 500);
+            return $this->error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 }
