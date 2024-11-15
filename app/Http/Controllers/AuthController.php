@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Traits\AuditLogger;
 use App\Http\Traits\HttpResponse;
+use App\Http\Traits\UserInfoAccess;
 use App\Models\Audit;
 use App\Models\Consultation;
 use App\Models\Student;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    use HttpResponse, AuditLogger;
+    use HttpResponse, AuditLogger, UserInfoAccess;
 
     public function register(StoreUserRequest $request)
     {
@@ -77,14 +78,7 @@ class AuthController extends Controller
 
     public function dashboardInfo(Request $request)
     {
-        $userInfo = $request->header('X-User-Info');
-
-        if ($userInfo) {
-            $user = json_decode($userInfo, true);
-            $userId = $user['id'] ?? null;
-        } else {
-            return $this->error('No user info found', HttpStatus::BAD_REQUEST);
-        }
+        $userId = $this->getUserId($request);
 
         $startOfToday = now()->startOfDay();
         $endOfToday = now()->endOfDay();
