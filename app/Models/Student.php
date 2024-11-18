@@ -18,6 +18,7 @@ class Student extends Model
         'gender',
         'course',
         'year',
+        'id_number',
         'birthdate',
         'mailing_address',
         'mailing_contact_number',
@@ -71,7 +72,8 @@ class Student extends Model
         'self_image_answer',
         'self_motivation_answer',
         'decision_making_answer',
-        'info_sheet_path'
+        'info_sheet_path',
+        'photo_path'
     ];
 
     protected function casts(): array

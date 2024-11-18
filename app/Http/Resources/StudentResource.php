@@ -21,6 +21,7 @@ class StudentResource extends JsonResource
             'gender' => $this->gender,
             'course' => $this->course,
             'year' => $this->year,
+            'idNumber' => $this->id_number,
             'birthdate' => $this->birthdate,
             'mailingAddress' => $this->mailing_address,
             'mailingContactNumber' => $this->mailing_contact_number,
@@ -74,7 +75,8 @@ class StudentResource extends JsonResource
             'selfImageAnswer' => $this->self_image_answer,
             'selfMotivationAnswer' => $this->self_motivation_answer,
             'decisionMakingAnswer' => $this->decision_making_answer,
-            'infoSheet' => $this->info_sheet_path
+            'infoSheet' => $this->info_sheet_path,
+            'photo' => $this->photo_path,
         ];
     }
 }

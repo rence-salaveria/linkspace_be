@@ -15,6 +15,7 @@ use Random\RandomException;
 class StudentController extends Controller
 {
     use HttpResponse;
+
     public function index()
     {
         return StudentResource::collection(Student::all());
@@ -44,7 +45,7 @@ class StudentController extends Controller
      */
     public function uploadPersonalInfoSheet(Request $request)
     {
-        if($request->hasFile('infoSheet')) {
+        if ($request->hasFile('infoSheet')) {
             $file = $request->file('infoSheet');
             $filename = time() . '-' . random_int(1000, 9999) . '.' . $file->getClientOriginalExtension();
             $maxSize = 10 * 1024 * 1024;
@@ -52,7 +53,11 @@ class StudentController extends Controller
 
             $extension = $file->getClientOriginalExtension();
             if (!in_array($extension, ['png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'pdf'])) return response()->json(['message' => 'Only JPG, JPEG, or PNG, PDF files are accepted.'], 400);
-            $folderPath = "student/info-sheet";
+            if ($request->dp === '1') {
+                $folderPath = "student/photo";
+            } else {
+                $folderPath = "student/info-sheet";
+            }
             $path = $file->storeAs($folderPath, $filename, 'public');
 
             return response()->json(['path' => $path, 'file' => $filename], 200);
@@ -89,7 +94,8 @@ class StudentController extends Controller
         }
     }
 
-    public function addStudent(Request $request) {
+    public function addStudent(Request $request)
+    {
         try {
             $mappedData = [
                 'first_name' => $request['firstName'],
@@ -99,6 +105,7 @@ class StudentController extends Controller
                 'gender' => $request['gender'],
                 'course' => $request['course'],
                 'year' => $request['year'],
+                'id_number' => $request['idNumber'],
                 'birthdate' => $request['birthdate'],
                 'mailing_address' => $request['mailingAddress'],
                 'mailing_contact_number' => $request['mailingContactNumber'],
@@ -152,7 +159,8 @@ class StudentController extends Controller
                 'self_image_answer' => $request['selfImageAnswer'],
                 'self_motivation_answer' => $request['selfMotivationAnswer'],
                 'decision_making_answer' => $request['decisionMakingAnswer'],
-                'info_sheet_path' => $request['infoSheetPath']['path'],
+                'info_sheet_path' => $request['infoSheetPath']['path'] ?? [],
+                'photo_path' => $request['photo']['path'] ?? [],
             ];
 
             $student = Student::create($mappedData);

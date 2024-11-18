@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('gender')->nullable();
             $table->string('course')->nullable();
             $table->string('year')->nullable();
+            $table->string('id_number')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('mailing_address')->nullable();
             $table->string('mailing_contact_number')->nullable();
@@ -70,6 +71,7 @@ return new class extends Migration {
             $table->text('self_motivation_answer')->nullable();
             $table->text('decision_making_answer')->nullable();
             $table->text('info_sheet_path')->nullable();
+            $table->string('photo_path')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
