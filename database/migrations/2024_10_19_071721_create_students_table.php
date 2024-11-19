@@ -58,7 +58,7 @@ return new class extends Migration {
             $table->string('guardian_email')->nullable();
             $table->string('emergency_contact')->nullable();
             $table->string('emergency_contact_number')->nullable();
-            $table->string('educ_status')->nullable();
+            $table->json('educ_status')->nullable();
             $table->json('educ_background')->nullable();
             $table->boolean('educ_assistance')->default(false)->nullable();
             $table->string('educ_assistance_info')->nullable();

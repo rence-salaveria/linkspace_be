@@ -24,7 +24,7 @@ Route::group(['prefix' => 'consultation'], function () {
 
 Route::group(['prefix' => 'student'], function () {
     Route::post('/add', [\App\Http\Controllers\StudentController::class, 'addStudent']);
-    Route::get('/{student}', [\App\Http\Controllers\StudentController::class, 'show']);
+    Route::get('/{id}', [\App\Http\Controllers\StudentController::class, 'show']);
     Route::get('/', [\App\Http\Controllers\StudentController::class, 'index']);
 });
 

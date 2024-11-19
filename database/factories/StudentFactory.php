@@ -70,7 +70,7 @@ class StudentFactory extends Factory
             'guardian_email' => $this->faker->optional()->email,
             'emergency_contact' => $this->faker->optional()->name,
             'emergency_contact_number' => $this->faker->optional()->phoneNumber,
-            'educ_status' => $this->faker->word,
+            'educ_status' => json_encode([]),
             'educ_background' => json_encode([['year' => 'test 1', 'level' => 'tertiary', 'honors' => 'None', 'address' => '2024', 'schoolName' => 'test 1']]),
             'educ_assistance' => $this->faker->boolean,
             'educ_assistance_info' => $this->faker->optional()->sentence,

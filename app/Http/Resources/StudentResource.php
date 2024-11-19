@@ -63,7 +63,7 @@ class StudentResource extends JsonResource
             'guardianEmail' => $this->guardian_email,
             'emergencyContact' => $this->emergency_contact,
             'emergencyContactNumber' => $this->emergency_contact_number,
-            'educStatus' => $this->educ_status,
+            'educStatus' => json_decode($this->educ_status, true),
             'educBackground' => json_decode($this->educ_background, true),
             'educAssistance' => $this->educ_assistance,
             'educAssistanceInfo' => $this->educ_assistance_info,

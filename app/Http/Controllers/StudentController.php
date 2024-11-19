@@ -21,8 +21,14 @@ class StudentController extends Controller
         return StudentResource::collection(Student::all());
     }
 
-    public function show(Student $student)
+    public function show($id)
     {
+        $student = Student::find($id);
+
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], 404);
+        }
+
         return new StudentResource($student);
     }
 
