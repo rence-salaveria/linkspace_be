@@ -6,7 +6,10 @@ use App\Enums\HttpStatus;
 use App\Http\Requests\AddStudentRequest;
 use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentResource;
+use App\Http\Traits\AuditLogger;
 use App\Http\Traits\HttpResponse;
+use App\Http\Traits\UserInfoAccess;
+use App\Models\Audit;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +17,7 @@ use Random\RandomException;
 
 class StudentController extends Controller
 {
-    use HttpResponse;
+    use HttpResponse, UserInfoAccess, AuditLogger;
 
     public function index()
     {
@@ -102,6 +105,8 @@ class StudentController extends Controller
 
     public function addStudent(Request $request)
     {
+        $userId = $this->getUserId($request);
+
         try {
             $mappedData = [
                 'first_name' => $request['firstName'],
@@ -170,6 +175,12 @@ class StudentController extends Controller
             ];
 
             $student = Student::create($mappedData);
+
+            $this->createLog(new Audit([
+                    'action_type' => 'create',
+                    'action_item' => 'student',
+                    'user_id' => $userId,
+            ]));
 
             return $this->success(new StudentResource($student), 'Student added successfully');
         } catch (\Exception $e) {
