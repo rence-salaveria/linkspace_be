@@ -33,7 +33,7 @@ class ConsultationController extends Controller
                 ->whereIn('status', ['LookUp-001', 'LookUp-002'])
                 ->get();
             return $this->success(ConsultationResource::collection($allConsultations), "Fetched successfully");
-        } elseif ($request->type === "upcoming") {
+        } elseif ($request->type === "today") {
             $allConsultations = Consultation::with(['student'])
                 ->where('counselor_id', $counselor)
                 ->where('status', 'LookUp-002')
