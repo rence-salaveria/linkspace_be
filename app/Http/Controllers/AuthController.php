@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\HttpStatus;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\AuditResource;
 use App\Http\Resources\UserResource;
 use App\Http\Traits\AuditLogger;
 use App\Http\Traits\HttpResponse;
@@ -97,7 +98,7 @@ class AuthController extends Controller
             ->count();
 
         $history = Consultation::where('counselor_id', $userId)
-            ->where('status', 'LookUp-003')
+            ->whereIn('status', ['LookUp-003', 'LookUp-004'])
             ->count();
 
         return $this->success([
@@ -107,5 +108,14 @@ class AuthController extends Controller
             'todayConsultations' => $todayConsultations,
             'history' => $history,
         ], 'Dashboard information retrieved successfully');
+    }
+
+    public function auditLogs(Request $request)
+    {
+        $userId = $this->getUserId($request);
+
+        $logs = Audit::with(['student', 'user', 'consultation'])->where('user_id', $userId)->get();
+
+        return $this->success(AuditResource::collection($logs), 'Audit logs retrieved successfully');
     }
 }

@@ -67,7 +67,6 @@ class ConsultationController extends Controller
     public function create(Request $request)
     {
         $counselorId = $this->getUserId($request);
-        $status = "";
 
         $consultation = null;
 
@@ -78,6 +77,8 @@ class ConsultationController extends Controller
                 'counselor_id' => $counselorId,
                 'student_id' => $request->selectedStudent,
                 'schedule_date' => $request->scheduleDate,
+                'concern' => $request->concern,
+                'counselor_comment' => $request->counselorComment,
                 'status' => $status,
             ]);
         } else {
@@ -86,6 +87,8 @@ class ConsultationController extends Controller
                 'counselor_id' => $counselorId,
                 'student_id' => $request->selectedStudent,
                 'schedule_date' => null,
+                'concern' => $request->concern,
+                'counselor_comment' => $request->counselorComment,
                 'status' => $status,
             ]);
         }
@@ -94,6 +97,7 @@ class ConsultationController extends Controller
             'action_type' => 'create',
             'action_item' => 'consultation',
             'user_id' => $counselorId,
+            'consultation_id' => $consultation->id,
             'student_id' => $request->selectedStudent,
         ]));
 
@@ -121,6 +125,7 @@ class ConsultationController extends Controller
             'action_type' => 'edit',
             'action_item' => 'consultation',
             'user_id' => $counselorId,
+            'consultation_id' => $consultation->id,
             'student_id' => $consultation->student_id,
         ]));
         return $this->success(new ConsultationResource($consultation), "Consultation updated successfully");
@@ -134,7 +139,7 @@ class ConsultationController extends Controller
         $consultation->save();
 
         $this->createLog(new Audit([
-            'action_type' => 'edit',
+            'action_type' => 'cancel',
             'action_item' => 'consultation',
             'user_id' => $counselorId,
             'student_id' => $consultation->student_id,
@@ -147,11 +152,13 @@ class ConsultationController extends Controller
     {
         $counselorId = $this->getUserId($request);
         $consultation = Consultation::findOrFail($consultationID);
+        $consultation->concern = $request->concern;
+        $consultation->counselor_comment = $request->counselorComment;
         $consultation->status = "LookUp-003";
         $consultation->save();
 
         $this->createLog(new Audit([
-            'action_type' => 'edit',
+            'action_type' => 'complete',
             'action_item' => 'consultation',
             'user_id' => $counselorId,
             'student_id' => $consultation->student_id,

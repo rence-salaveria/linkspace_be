@@ -12,6 +12,7 @@ Route::get('/user', function (Request $request) {
 Route::group(['prefix' => 'user'], function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/audit', [AuthController::class, 'auditLogs']);
 });
 
 

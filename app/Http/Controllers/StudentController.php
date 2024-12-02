@@ -180,6 +180,7 @@ class StudentController extends Controller
                     'action_type' => 'create',
                     'action_item' => 'student',
                     'user_id' => $userId,
+                    'student_id' => $student->id,
             ]));
 
             return $this->success(new StudentResource($student), 'Student added successfully');
