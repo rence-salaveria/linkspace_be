@@ -84,4 +84,12 @@ class ConsultationController extends Controller
             ]);
         }
     }
+
+    public function cancelConsultation(int $consultationID)
+    {
+        $consultation = Consultation::findOrFail($consultationID);
+        $consultation->status = "LookUp-004";
+        $consultation->save();
+        return $this->success(new ConsultationResource($consultation), "Consultation cancelled successfully");
+    }
 }
