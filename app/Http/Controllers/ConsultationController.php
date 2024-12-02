@@ -8,8 +8,10 @@ use App\Http\Resources\ConsultationResource;
 use App\Http\Traits\AuditLogger;
 use App\Http\Traits\HttpResponse;
 use App\Http\Traits\UserInfoAccess;
+use App\Models\Audit;
 use App\Models\Consultation;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ConsultationController extends Controller
 {
@@ -27,6 +29,8 @@ class ConsultationController extends Controller
 
     public function getByCounselorId(int $counselor, Request $request)
     {
+        $startOfToday = now()->startOfDay()->sub(8, 'hours');
+        $endOfToday = now()->endOfDay()->sub(8, 'hours');
         // type = pending, upcoming, done
         if ($request->type === "pending") {
             $allConsultations = Consultation::with(['student'])
@@ -40,7 +44,7 @@ class ConsultationController extends Controller
                 ->where('counselor_id', $counselor)
                 ->where('status', 'LookUp-002')
                 ->orderBy('created_at', 'desc')
-                ->whereDate('schedule_date', now()->toDateString())
+                ->whereBetween('schedule_date', [$startOfToday, $endOfToday])
                 ->get();
             return $this->success(ConsultationResource::collection($allConsultations), "Fetched successfully");
         } elseif ($request->type === "done") {
@@ -65,10 +69,12 @@ class ConsultationController extends Controller
         $counselorId = $this->getUserId($request);
         $status = "";
 
+        $consultation = null;
+
         if ($request->scheduleDate !== null) {
             $status = "LookUp-002";
-            $request->scheduleDate = date('Y-m-d H:i:s', strtotime($request->scheduleDate));
-            Consultation::create([
+//            $request->scheduleDate = date('Y-m-d H:i:s', strtotime($request->scheduleDate));$scheduleDate = Carbon::parse($request->input('scheduleDate'))->setTimezone(config('app.timezone'));
+            $consultation = Consultation::create([
                 'counselor_id' => $counselorId,
                 'student_id' => $request->selectedStudent,
                 'schedule_date' => $request->scheduleDate,
@@ -76,20 +82,81 @@ class ConsultationController extends Controller
             ]);
         } else {
             $status = "LookUp-001";
-            Consultation::create([
+            $consultation = Consultation::create([
                 'counselor_id' => $counselorId,
                 'student_id' => $request->selectedStudent,
                 'schedule_date' => null,
                 'status' => $status,
             ]);
         }
+
+        $this->createLog(new Audit([
+            'action_type' => 'create',
+            'action_item' => 'consultation',
+            'user_id' => $counselorId,
+            'student_id' => $request->selectedStudent,
+        ]));
+
+        return $this->success(new ConsultationResource($consultation), "Consultation updated successfully");
     }
 
-    public function cancelConsultation(int $consultationID)
+    public function editConsultation(Request $request, int $consultationID)
     {
+        $counselorId = $this->getUserId($request);
+
+        $consultation = Consultation::findOrFail($consultationID);
+        if ($request->scheduleDate === null) {
+            $consultation->schedule_date = null;
+            $consultation->status = "LookUp-001";
+        } else {
+//            $scheduleDate = Carbon::parse($request->input('scheduleDate'))->setTimezone(config('app.timezone'));
+            $consultation->schedule_date = $request->scheduleDate;
+            $consultation->status = "LookUp-002";
+        }
+        $consultation->counselor_comment = $request->counselorComment;
+        $consultation->concern = $request->concern;
+        $consultation->save();
+
+        $this->createLog(new Audit([
+            'action_type' => 'edit',
+            'action_item' => 'consultation',
+            'user_id' => $counselorId,
+            'student_id' => $consultation->student_id,
+        ]));
+        return $this->success(new ConsultationResource($consultation), "Consultation updated successfully");
+    }
+
+    public function cancelConsultation(Request $request, int $consultationID)
+    {
+        $counselorId = $this->getUserId($request);
         $consultation = Consultation::findOrFail($consultationID);
         $consultation->status = "LookUp-004";
         $consultation->save();
+
+        $this->createLog(new Audit([
+            'action_type' => 'edit',
+            'action_item' => 'consultation',
+            'user_id' => $counselorId,
+            'student_id' => $consultation->student_id,
+        ]));
+
+        return $this->success(new ConsultationResource($consultation), "Consultation cancelled successfully");
+    }
+
+    public function completeConsultation(Request $request, int $consultationID)
+    {
+        $counselorId = $this->getUserId($request);
+        $consultation = Consultation::findOrFail($consultationID);
+        $consultation->status = "LookUp-003";
+        $consultation->save();
+
+        $this->createLog(new Audit([
+            'action_type' => 'edit',
+            'action_item' => 'consultation',
+            'user_id' => $counselorId,
+            'student_id' => $consultation->student_id,
+        ]));
+
         return $this->success(new ConsultationResource($consultation), "Consultation cancelled successfully");
     }
 }

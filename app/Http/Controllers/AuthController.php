@@ -80,8 +80,8 @@ class AuthController extends Controller
     {
         $userId = $this->getUserId($request);
 
-        $startOfToday = now()->startOfDay();
-        $endOfToday = now()->endOfDay();
+        $startOfToday = now()->startOfDay()->sub(8, 'hours');
+        $endOfToday = now()->endOfDay()->sub(8, 'hours');
 
         $audit = Audit::where('user_id', $userId)->count();
         $student = Student::count();
@@ -93,6 +93,7 @@ class AuthController extends Controller
 
         $todayConsultations = Consultation::where('counselor_id', $userId)
             ->whereBetween('schedule_date', [$startOfToday, $endOfToday])
+            ->where('status', 'LookUp-002')
             ->count();
 
         $history = Consultation::where('counselor_id', $userId)

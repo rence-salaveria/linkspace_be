@@ -20,6 +20,9 @@ Route::group(['prefix' => 'consultation'], function () {
     Route::get('/{counselor}', [ConsultationController::class, 'getByCounselorId']);
     Route::get('/show/{consultation}', [ConsultationController::class, 'show']);
     Route::post('/create', [ConsultationController::class, 'create']);
+    Route::post('/update/{consultation}', [ConsultationController::class, 'editConsultation']);
+    Route::post('/cancel/{consultation}', [ConsultationController::class, 'cancelConsultation']);
+    Route::post('/complete/{consultation}', [ConsultationController::class, 'completeConsultation']);
 });
 
 Route::group(['prefix' => 'student'], function () {
