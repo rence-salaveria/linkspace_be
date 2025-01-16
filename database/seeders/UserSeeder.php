@@ -18,6 +18,6 @@ class UserSeeder extends Seeder
         User::factory()->predefinedUser('Maxine', 'max@gmail.com', '12345678', 'max')->create();
         User::factory()->predefinedUser('Irhene', 'irhene123@gmail.com', '87654321', 'irhene')->create();
         User::factory()->predefinedUser('Lance Ong', 'lance123@gmail.com', 'Password@123', 'lance')->create();
-        
+        User::factory()->predefinedUser('Jhairo Frondozo', 'jhai@gmail.com', 'Password@123', 'jhai')->create();
     }
 }
