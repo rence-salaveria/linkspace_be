@@ -18,6 +18,11 @@ class UserSeeder extends Seeder
         User::factory()->predefinedUser('Maxine', 'max@gmail.com', '12345678', 'max')->create();
         User::factory()->predefinedUser('Irhene', 'irhene123@gmail.com', '87654321', 'irhene')->create();
         User::factory()->predefinedUser('Lance Ong', 'lance123@gmail.com', 'Password@123', 'lance')->create();
-        User::factory()->predefinedUser('Jhairo Frondozo', 'jhai@gmail.com', 'Password@123', 'jhai')->create();
+        User::factory()->predefinedUser('BCP MV', 'jhai1@gmail.com', 'Password@123', 'bcpmv')->create();
+        User::factory()->predefinedUser('BCP MAIN', 'jhai2@gmail.com', 'Password@123', 'bcpmain')->create();
+        User::factory()->predefinedUser('BCP BULACAN', 'jhai3@gmail.com', 'Password@123', 'bcpbulacan')->create();
+        User::factory()->predefinedUser('BCP ANNEX', 'jhai4@gmail.com', 'Password@123', 'bcpannex')->create();
+        User::factory()->predefinedUser('BCP HD', 'jhai5@gmail.com', 'Password@123', 'bcphd')->create();
+        User::factory()->predefinedUser('BCP CRIM', 'jhai6@gmail.com', 'Password@123', 'bcpcrim')->create();
     }
 }
