@@ -170,8 +170,8 @@ class StudentController extends Controller
                 'self_image_answer' => $request['selfImageAnswer'],
                 'self_motivation_answer' => $request['selfMotivationAnswer'],
                 'decision_making_answer' => $request['decisionMakingAnswer'],
-                'info_sheet_path' => $request['infoSheetPath']['path'] ?? [],
-                'photo_path' => $request['photo']['path'] ?? [],
+                'info_sheet_path' => $request['infoSheetPath']['path'] ?? "",
+                'photo_path' => $request['photo']['path'] ?? "",
             ];
 
             $student = Student::create($mappedData);
